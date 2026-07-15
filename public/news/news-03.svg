@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" preserveAspectRatio="xMidYMid slice">
+  <!-- TODO: replace with real photography -->
+  <defs>
+    <radialGradient id="tint" cx="72%" cy="24%" r="80%">
+      <stop offset="0%" stop-color="#1F6F6D" stop-opacity="0.5"/>
+      <stop offset="60%" stop-color="#1F6F6D" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#E9E1D0" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="sheen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#14161A" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#14161A" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="480" fill="#E9E1D0"/>
+  <rect width="640" height="480" fill="url(#tint)"/>
+  <rect width="640" height="480" fill="url(#sheen)"/>
+  <rect x="24" y="24" width="592" height="432" fill="none" stroke="#14161A" stroke-opacity="0.18"/>
+  <text x="588" y="424" text-anchor="end" font-family="'Bodoni Moda','Didot','Bodoni MT',serif" font-style="italic" font-size="163" fill="#14161A" fill-opacity="0.22">N3</text>
+  <circle cx="56" cy="416" r="4" fill="#1F6F6D"/>
+</svg>

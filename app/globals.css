@@ -1,0 +1,146 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design tokens as CSS vars — mirror of tailwind.config.ts */
+:root {
+  --color-paper: #f2f0eb;
+  --color-ink: #14161a;
+  --color-navy: #1b2a4a;
+  --color-mahogany: #6e3d25;
+  --color-brass: #c08a3e;
+  --color-cream: #e9e1d0;
+  --color-smoke: #8a8a86;
+  --color-magenta: #c01d63;
+  --color-teal: #1f6f6d;
+  color-scheme: light;
+}
+
+@layer base {
+  body {
+    @apply bg-paper font-mono text-ink antialiased;
+  }
+
+  ::selection {
+    background: rgba(192, 29, 99, 0.22);
+  }
+
+  :focus-visible {
+    outline: 2px solid theme(colors.magenta);
+    outline-offset: 3px;
+  }
+}
+
+@layer utilities {
+  /* Archivo's expanded cut — pairs with the font-display family utility */
+  .font-display {
+    font-stretch: 125%;
+  }
+
+  /* Small-caps mono section label, e.g. `— 01 / OFFER` */
+  .eyebrow {
+    @apply font-mono text-xs uppercase tracking-[0.25em] text-smoke;
+  }
+
+  /* 1px ink hairline at 12% — the only divider style */
+  .hairline {
+    @apply border-ink/[0.12];
+  }
+}
+
+/* Lenis smooth-scroll plumbing (inlined from lenis/dist/lenis.css) */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Custom cursor — mounted only on fine pointers without reduced motion */
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+.cursor-wrap {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  pointer-events: none;
+}
+/* Dot color follows the surface under the pointer:
+   navy on light sections (paper/cream), magenta — the Contact Us pill
+   color — on dark sections (hero, Educational Offer), so it never vanishes. */
+.cursor-dot {
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 9999px;
+  background: var(--color-navy);
+  transition: background-color 0.25s;
+}
+.cursor-wrap[data-theme="dark"] .cursor-dot {
+  background: var(--color-magenta);
+}
+.cursor-wrap[data-mode="view"] .cursor-dot {
+  background: var(--color-magenta);
+}
+.cursor-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 96px;
+  margin: -6px 0 0 -48px;
+  text-align: center;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-paper);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.cursor-wrap[data-mode="view"] .cursor-label {
+  opacity: 1;
+}
+
+/* Infinite marquee band — the track holds two copies of the content */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee 30s linear infinite;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* Poster fallback drift — disabled entirely under reduced motion */
+@keyframes kenburns {
+  from {
+    transform: scale(1.02) translateY(0);
+  }
+  to {
+    transform: scale(1.08) translateY(-1.2%);
+  }
+}
+.kenburns {
+  animation: kenburns 22s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .kenburns {
+    animation: none;
+  }
+}
