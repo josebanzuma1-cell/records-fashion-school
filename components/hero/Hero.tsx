@@ -1,15 +1,11 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import dynamic from "next/dynamic";
 import { gsap } from "@/lib/gsap";
 import { GSAP_EASE, DUR, STAGGER } from "@/lib/motion";
-import { heroConfig } from "./heroConfig";
-import HeroPoster from "./HeroPoster";
+import { heroSlides, heroIntervalMs } from "./heroConfig";
 import PillLink from "@/components/ui/PillLink";
 import Magnetic from "@/components/ui/Magnetic";
-
-const HeroCanvas = dynamic(() => import("./HeroCanvas"), { ssr: false });
 
 /** Word split for the staggered reveal; keeps markup semantic via aria-label on the h1.
  *  Copy from the school's flyer: “Unlock your creativity…” */
@@ -20,30 +16,19 @@ const HEADLINE_LINES: { words: string[]; accent?: boolean }[] = [
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [show3D, setShow3D] = useState(false);
-  const [canvasReady, setCanvasReady] = useState(false);
-  const [inView, setInView] = useState(true);
+  const [slide, setSlide] = useState(0);
+  const pausedRef = useRef(false);
 
-  // 3D only on desktop pointers, without reduced-motion, with WebGL available.
+  // Advance through the garment photography on a timer. Skipped entirely
+  // under prefers-reduced-motion (first slide just holds); hovering the
+  // hero pauses the cycle so a visitor can linger on one photo.
   useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const small = window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
-    if (reduced || small) return;
-    const probe = document.createElement("canvas");
-    if (probe.getContext("webgl2") || probe.getContext("webgl")) setShow3D(true);
-  }, []);
-
-  // Idle the WebGL loop once the hero scrolls out of view — it otherwise
-  // keeps burning GPU behind later sections and drags the whole page.
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
-      { threshold: 0.05 },
-    );
-    observer.observe(section);
-    return () => observer.disconnect();
+    if (heroSlides.length <= 1) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = setInterval(() => {
+      if (!pausedRef.current) setSlide((i) => (i + 1) % heroSlides.length);
+    }, heroIntervalMs);
+    return () => clearInterval(id);
   }, []);
 
   // Headline word reveal — rise + fade; accent word eases in a beat later.
@@ -83,19 +68,30 @@ export default function Hero() {
     <section
       ref={sectionRef}
       data-cursor-theme="dark"
+      onMouseEnter={() => (pausedRef.current = true)}
+      onMouseLeave={() => (pausedRef.current = false)}
       className="relative min-h-[100svh] overflow-hidden bg-navy text-paper"
     >
-      {/* Visual layers: poster under canvas; poster stays for fallback modes */}
-      <HeroPoster hidden={show3D && canvasReady} drift={!show3D} />
-      {show3D && (
-        <div
-          className={`absolute inset-0 transition-opacity duration-1000 ${
-            canvasReady ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <HeroCanvas active={inView} onReady={() => setCanvasReady(true)} />
-        </div>
-      )}
+      {/* Slide stack — all five pre-rendered, crossfaded via opacity only
+          (no layout, no WebGL, pure GPU compositing). Decorative: the
+          meaningful copy lives in the text layer below; each slide's
+          content is still exposed via the matching dot's aria-label. */}
+      <div className="absolute inset-0" aria-hidden>
+        {heroSlides.map((s, i) => (
+          <img
+            key={s.src}
+            src={s.src}
+            alt=""
+            loading="eager"
+            decoding="async"
+            fetchPriority={i === 0 ? "high" : undefined}
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-[1400ms] ease-out ${
+              i === slide ? "opacity-100" : "opacity-0"
+            }`}
+          />
+        ))}
+        <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/35 to-ink/10" />
+      </div>
 
       {/* Copy — bottom-left, editorial */}
       <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-content flex-col justify-end px-6 pb-20 pt-40 lg:px-12 lg:pb-24">
@@ -158,6 +154,31 @@ export default function Hero() {
             </Magnetic>
           </div>
         </div>
+
+        {/* Slide navigation */}
+        {heroSlides.length > 1 && (
+          <div
+            data-hero-fade
+            role="group"
+            aria-label="Hero photo selector"
+            className="mt-10 flex items-center gap-2"
+          >
+            {heroSlides.map((s, i) => (
+              <button
+                key={s.src}
+                type="button"
+                onClick={() => setSlide(i)}
+                aria-label={`Show photo ${i + 1} of ${heroSlides.length}: ${s.alt}`}
+                aria-current={i === slide}
+                className={`h-1.5 rounded-full transition-all duration-500 ${
+                  i === slide
+                    ? "w-8 bg-magenta"
+                    : "w-1.5 bg-paper/40 hover:bg-paper/70"
+                }`}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Scroll cue */}

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+  <!-- TODO: replace with real photograph -- Photo 3 — Maroon checkerboard coat, draped silver fringe -->
+  <defs>
+    <radialGradient id="g1" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#7A2338" stop-opacity="0.65"/>
+      <stop offset="100%" stop-color="#241014" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="g2" cx="68%" cy="60%" r="55%">
+      <stop offset="0%" stop-color="#9AA0A6" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#241014" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vig" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#241014" stop-opacity="0"/>
+      <stop offset="75%" stop-color="#05070c" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#05070c" stop-opacity="0.55"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="#241014"/>
+  <rect width="1600" height="1000" fill="url(#g1)"/>
+  <rect width="1600" height="1000" fill="url(#g2)"/>
+  <rect width="1600" height="1000" fill="url(#vig)"/>
+  <text x="1548" y="900" text-anchor="end" font-family="'Bodoni Moda','Didot','Bodoni MT',serif" font-style="italic" font-size="340" fill="#F2F0EB" fill-opacity="0.08">03</text>
+  <text x="52" y="944" font-family="'Space Mono',ui-monospace,monospace" font-size="22" letter-spacing="1" fill="#F2F0EB" fill-opacity="0.55">Photo 3 — Maroon checkerboard coat, draped silver fringe</text>
+</svg>

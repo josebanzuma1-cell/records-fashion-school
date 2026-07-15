@@ -1,7 +1,7 @@
 # CLAUDE.md — Records Fashion School Website
 
 Project rules and art direction. Read fully before writing or editing code.
-Every component must obey the ART DIRECTION, TYPOGRAPHY, MOTION, and 3D rules.
+Every component must obey the ART DIRECTION, TYPOGRAPHY, and MOTION rules.
 When in doubt, favor restraint, whitespace, and editorial elegance.
 
 Brand name: **Records Fashion School** (Kampala, Uganda). Use this exact name everywhere.
@@ -27,9 +27,9 @@ High-end fashion-school website with an **editorial, luxurious, fashion-magazine
 feel (structural reference: Ferrari Fashion School, Milan — layout/feel benchmark
 only; a screen capture of it drives the landing-page section structure).
 Single-scroll homepage + sub-pages:
-Nav → Hero (3D) → Intro (serif line-reveal + index links) → Educational Offer
-(dark section, sticky intro left, card grid right) → Magazine (cream panel,
-news grid) → Marquee band → Footer.
+Nav → Hero (garment-photography crossfade loop) → Intro (serif line-reveal +
+index links) → Educational Offer (dark section, sticky intro left, card grid
+right) → Magazine (cream panel, news grid) → Marquee band → Footer.
 
 ## 1a. Navigation & site map
 
@@ -44,8 +44,10 @@ pages graduate out of `app/[...slug]/page.tsx` (see `DEDICATED` set there).
 ## 2. Tech stack (do not swap without asking)
 
 Next.js (App Router) + TypeScript · Tailwind CSS v3 · next/font/google ·
-GSAP + ScrollTrigger + SplitText · Lenis · Framer Motion ·
-@react-three/fiber + drei + @react-three/postprocessing · three.
+GSAP + ScrollTrigger + SplitText · Lenis · Framer Motion.
+
+No 3D/WebGL library (removed — see §5). Adding one back requires asking
+first; the whole point of removing three.js was cutting page weight.
 
 Package manager: **npm** (pnpm was specified but its store needs symlink
 permissions this Windows machine doesn't grant; switch back only if Developer
@@ -53,8 +55,8 @@ Mode is enabled). Node 18+.
 
 ## 3. Art direction
 
-Warm editorial minimalism. Paper base, ink text, photography and the 3D scene
-carry color. The UI accent is the school's real brand magenta.
+Warm editorial minimalism. Paper base, ink text, photography carries color.
+The UI accent is the school's real brand magenta.
 
 ### Color tokens (`tailwind.config.ts` + CSS vars in `app/globals.css`)
 
@@ -62,17 +64,17 @@ carry color. The UI accent is the school's real brand magenta.
 |------------|-----------|------------------------------------------------------|
 | `paper`    | `#F2F0EB` | Page background                                      |
 | `ink`      | `#14161A` | Primary text / dark sections                         |
-| `navy`     | `#1B2A4A` | Deep suiting navy — hero scene, dark accents         |
+| `navy`     | `#1B2A4A` | Deep suiting navy — hero fallback bg, dark accents   |
 | `mahogany` | `#6E3D25` | Warm wood accent                                     |
-| `brass`    | `#C08A3E` | Warm support tone — 3D atelier light, imagery only   |
+| `brass`    | `#C08A3E` | Warm support tone — imagery warmth only              |
 | `cream`    | `#E9E1D0` | Dividers, muted fills, Magazine panel                |
 | `smoke`    | `#8A8A86` | Muted labels, captions, meta                         |
 | `magenta`  | `#C01D63` | **PRIMARY accent** (real brand color from the logo)  |
 | `teal`     | `#1F6F6D` | Logo support color — reserved, use sparingly         |
 
 Rules: one accent at a time — `magenta` for UI (hover, highlights, CTA);
-`brass` stays photographic (3D lighting, imagery warmth), never both in one
-element. Never pure `#000`/`#fff`. Hairlines: 1px ink at 12% (`.hairline`).
+`brass` stays photographic (imagery warmth only), never both in one element.
+Never pure `#000`/`#fff`. Hairlines: 1px ink at 12% (`.hairline`).
 
 ### Layout language
 
@@ -90,21 +92,41 @@ eyebrows (`— 01 / OFFER`); mono letter-spaced dates; sections breathe
 
 Fluid type via `clamp()`. Never a fourth font.
 
-## 5. The 3D hero
+## 5. The hero photo loop
 
-Tailor's dress form rotating in a warm atelier: navy pinstripe, cream
-measuring tape spiral, amber key light, DoF bokeh, contact shadow.
+**Formerly a WebGL 3D dress-form scene — removed 2026-07 for page weight and
+scroll jank (see git history for the old approach if it's ever wanted back).**
+The hero is now five garment photographs, absolutely stacked and crossfaded
+by opacity only (no layout, no canvas, pure GPU compositing).
 
-**The subject is a config-driven slot.** `components/hero/heroConfig.ts` holds
-all tunables (`subject`, `rotationSpeed`, `mouseParallax`, `posterSrc`,
-palette). `HeroSubject.tsx` holds the registry — adding a subject = new file in
-`subjects/` + one registry entry + config key. Nothing else changes. All
-subjects fit a ~1.1×2.2×1.1 box, pivot on the floor at origin.
+All content lives in `components/hero/heroConfig.ts`: `heroSlides` (ordered
+array of `{ src, alt }`, shown in exactly that order — the array order *is*
+the loop order), `heroIntervalMs` (hold time per slide), `heroTransitionMs`
+(crossfade duration, keep in sync with the `duration-[…]` class in
+`Hero.tsx`). To add/remove/reorder slides, edit only this array.
 
-Performance/fallback (mandatory): canvas lazy-loaded `ssr:false`; poster still
-(`public/hero-poster.svg` — `// TODO: real atelier photograph`) on mobile,
-reduced-motion, no-WebGL, and during warm-up; DPR capped [1,2]; one post-fx
-pass (DoF); dispose textures/geometries on unmount.
+Current slides are placeholder SVGs at `public/hero/hero-01.svg` …
+`hero-05.svg`, each captioned in-image with which real photograph belongs
+there. `// TODO: replace each with the matching garment photo, same
+filename — no code changes needed.`
+
+Behavior: `Hero.tsx` runs a `setInterval` that advances `slide` on a timer;
+skipped entirely under `prefers-reduced-motion` (first slide just holds).
+Hovering the section pauses the cycle via a ref flag (no re-subscribing
+listeners). A row of dots under the CTAs lets a visitor jump to any slide or
+step through manually — each dot's `aria-label` carries that slide's `alt`
+text, since the crossfading image layer itself is `aria-hidden`. A
+`from-ink/85 via-ink/35 to-ink/10` gradient scrim sits over every slide so
+the paper/cream copy stays legible regardless of which photo is showing.
+
+Perf notes for whoever touches this next: all five images render
+simultaneously (stacked, opacity-toggled) rather than swapping `src` — that
+front-loads the fetches so switching slides never pops in unloaded content.
+Only slide 0 gets `fetchPriority="high"` (LCP candidate); the rest are plain
+`loading="eager" decoding="async"`. If the real photos turn out to be large
+JPGs, consider moving to `next/image` with `fill` for automatic resizing —
+not done yet because the current SVG placeholders don't benefit from it and
+raw `<img>` matches the same pattern already used for course/news cards.
 
 ## 6. Motion system
 
@@ -132,16 +154,17 @@ Functional components, one per file, PascalCase. GSAP work inside
 styling; tokens centralized (`tailwind.config.ts`, `lib/motion.ts`,
 `heroConfig.ts`, `lib/school.ts`). Semantic headings, real buttons/links,
 alt text, visible focus, keyboard-navigable nav. Placeholder imagery lives in
-`public/courses/` + `public/news/` — every placeholder carries a
-`// TODO: replace with real content` marker.
+`public/courses/` + `public/news/` + `public/hero/` — every placeholder
+carries a `// TODO: replace with real content` marker.
 
 ## 8. Do / Don't
 
 **Do**: keep it minimal, editorial, warm, confident; lean on Archivo +
-Bodoni-italic pairing; keep the 3D subject swappable; show the hero for
-approval before big changes.
+Bodoni-italic pairing; keep the hero slide list config-driven (§5); show
+big visual changes for approval before continuing.
 
 **Don't**: add fonts or accent colors; over-animate (no bounce/spring); use
-localStorage/sessionStorage in preview artifacts; hard-code hero tunables;
-ship motion/3D without reduced-motion + mobile fallbacks; retype brand facts
-that belong in `lib/school.ts`.
+localStorage/sessionStorage in preview artifacts; hard-code hero timing
+inline instead of `heroConfig.ts`; ship motion without a reduced-motion
+fallback; bring back a 3D/WebGL library without asking first (§2); retype
+brand facts that belong in `lib/school.ts`.

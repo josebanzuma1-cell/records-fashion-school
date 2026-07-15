@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+  <!-- TODO: replace with real photograph -- Photo 4 — Sculptural wing/cage silhouette, BACK view -->
+  <defs>
+    <radialGradient id="g1" cx="50%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#6B6B52" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#302E22" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="g2" cx="50%" cy="80%" r="55%">
+      <stop offset="0%" stop-color="#1A1A16" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#302E22" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vig" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#302E22" stop-opacity="0"/>
+      <stop offset="75%" stop-color="#05070c" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#05070c" stop-opacity="0.55"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="#302E22"/>
+  <rect width="1600" height="1000" fill="url(#g1)"/>
+  <rect width="1600" height="1000" fill="url(#g2)"/>
+  <rect width="1600" height="1000" fill="url(#vig)"/>
+  <text x="1548" y="900" text-anchor="end" font-family="'Bodoni Moda','Didot','Bodoni MT',serif" font-style="italic" font-size="340" fill="#F2F0EB" fill-opacity="0.08">04</text>
+  <text x="52" y="944" font-family="'Space Mono',ui-monospace,monospace" font-size="22" letter-spacing="1" fill="#F2F0EB" fill-opacity="0.55">Photo 4 — Sculptural wing/cage silhouette, BACK view</text>
+</svg>

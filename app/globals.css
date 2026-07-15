@@ -126,22 +126,3 @@ html.has-custom-cursor * {
     animation: none;
   }
 }
-
-/* Poster fallback drift — disabled entirely under reduced motion */
-@keyframes kenburns {
-  from {
-    transform: scale(1.02) translateY(0);
-  }
-  to {
-    transform: scale(1.08) translateY(-1.2%);
-  }
-}
-.kenburns {
-  animation: kenburns 22s ease-in-out infinite alternate;
-  will-change: transform;
-}
-@media (prefers-reduced-motion: reduce) {
-  .kenburns {
-    animation: none;
-  }
-}
