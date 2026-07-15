@@ -4,11 +4,8 @@
  * hovering the hero pauses the cycle, and the dots let a visitor jump
  * straight to one or step through manually.
  *
- * // TODO: swap each placeholder SVG below for the matching garment
- * // photograph, keeping the exact filename (hero-01.svg … hero-05.svg
- * // under public/hero/, or update the src here) — no code changes
- * // needed beyond the file itself. See each placeholder's caption for
- * // which real photo belongs in that slot.
+ * Real garment photography, sourced from the school's own Instagram
+ * archive. To reorder, add, or remove slides, edit this array only.
  */
 
 export type HeroSlide = {
@@ -19,23 +16,23 @@ export type HeroSlide = {
 
 export const heroSlides: HeroSlide[] = [
   {
-    src: "/hero/hero-01.svg",
+    src: "/hero/hero-01.jpg",
     alt: "Tailor's dress form in navy pinstripe wool, wrapped in a cream measuring tape",
   },
   {
-    src: "/hero/hero-02.svg",
+    src: "/hero/hero-02.jpg",
     alt: "Sculptural orange shell headpiece and gown",
   },
   {
-    src: "/hero/hero-03.svg",
+    src: "/hero/hero-03.jpg",
     alt: "Maroon checkerboard coat with a draped silver fringe panel",
   },
   {
-    src: "/hero/hero-04.svg",
+    src: "/hero/hero-04.jpg",
     alt: "Sculptural grey and black caged silhouette with wing shoulders, back view",
   },
   {
-    src: "/hero/hero-05.svg",
+    src: "/hero/hero-05.jpg",
     alt: "Sculptural grey and black caged silhouette with wing shoulders, front view",
   },
 ];

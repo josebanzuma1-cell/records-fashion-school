@@ -105,10 +105,14 @@ the loop order), `heroIntervalMs` (hold time per slide), `heroTransitionMs`
 (crossfade duration, keep in sync with the `duration-[…]` class in
 `Hero.tsx`). To add/remove/reorder slides, edit only this array.
 
-Current slides are placeholder SVGs at `public/hero/hero-01.svg` …
-`hero-05.svg`, each captioned in-image with which real photograph belongs
-there. `// TODO: replace each with the matching garment photo, same
-filename — no code changes needed.`
+Slides are real garment photography (`public/hero/hero-01.jpg` …
+`hero-05.jpg`), sourced from the school's Instagram archive at
+`C:\Users\BAMU\OneDrive\Desktop\records fashion school\` on the user's
+machine (that folder has ~58 more photos + reels if the loop is ever
+expanded or refreshed — go find matches there, don't ask for re-uploads).
+Current order: 01 atelier dress form + tape measure, 02 orange shell
+headpiece, 03 maroon checkerboard coat, 04 wing-cage silhouette back view,
+05 same piece front view.
 
 Behavior: `Hero.tsx` runs a `setInterval` that advances `slide` on a timer;
 skipped entirely under `prefers-reduced-motion` (first slide just holds).
