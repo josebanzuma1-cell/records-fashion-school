@@ -22,6 +22,7 @@ export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const [show3D, setShow3D] = useState(false);
   const [canvasReady, setCanvasReady] = useState(false);
+  const [inView, setInView] = useState(true);
 
   // 3D only on desktop pointers, without reduced-motion, with WebGL available.
   useEffect(() => {
@@ -30,6 +31,19 @@ export default function Hero() {
     if (reduced || small) return;
     const probe = document.createElement("canvas");
     if (probe.getContext("webgl2") || probe.getContext("webgl")) setShow3D(true);
+  }, []);
+
+  // Idle the WebGL loop once the hero scrolls out of view — it otherwise
+  // keeps burning GPU behind later sections and drags the whole page.
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { threshold: 0.05 },
+    );
+    observer.observe(section);
+    return () => observer.disconnect();
   }, []);
 
   // Headline word reveal — rise + fade; accent word eases in a beat later.
@@ -79,7 +93,7 @@ export default function Hero() {
             canvasReady ? "opacity-100" : "opacity-0"
           }`}
         >
-          <HeroCanvas onReady={() => setCanvasReady(true)} />
+          <HeroCanvas active={inView} onReady={() => setCanvasReady(true)} />
         </div>
       )}
 

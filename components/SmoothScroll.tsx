@@ -13,7 +13,9 @@ export default function SmoothScroll() {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const lenis = new Lenis({ lerp: 0.1 });
+    // 0.1 glides too long and reads as scroll delay; 0.16 stays smooth
+    // but tracks the wheel much more closely.
+    const lenis = new Lenis({ lerp: 0.16 });
     setLenis(lenis);
 
     lenis.on("scroll", ScrollTrigger.update);

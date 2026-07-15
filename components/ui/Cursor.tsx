@@ -30,8 +30,9 @@ export default function Cursor() {
     const dot = dotRef.current!;
     document.documentElement.classList.add("has-custom-cursor");
 
-    const xTo = gsap.quickTo(wrap, "x", { duration: 0.3, ease: "power3.out" });
-    const yTo = gsap.quickTo(wrap, "y", { duration: 0.3, ease: "power3.out" });
+    // Near-instant follow — longer trails read as input lag.
+    const xTo = gsap.quickTo(wrap, "x", { duration: 0.11, ease: "power2.out" });
+    const yTo = gsap.quickTo(wrap, "y", { duration: 0.11, ease: "power2.out" });
     const scaleTo = gsap.quickTo(dot, "scale", {
       duration: 0.35,
       ease: "power3.out",
