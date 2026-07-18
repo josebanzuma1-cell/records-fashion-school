@@ -76,6 +76,27 @@ Rules: one accent at a time — `magenta` for UI (hover, highlights, CTA);
 `brass` stays photographic (imagery warmth only), never both in one element.
 Never pure `#000`/`#fff`. Hairlines: 1px ink at 12% (`.hairline`).
 
+### Logo
+
+`public/logo.png` — the school's real illustrated crest (stylised figure in
+a magenta gown, teal panel, gold fish + scissors, tape-measure ribbon
+reading "RECORDS FASHION SCHOOL", "SKILLS FOR LIFE" beneath). Transparent
+background — extracted from the letterhead in the official Application Form
+docx (the school's brand-asset folder is
+`C:\Users\BAMU\OneDrive\Desktop\records fashion school\` on the user's
+machine) and background-keyed from white to transparent so it sits cleanly
+on both the solid paper header and the transparent/photo hero header state.
+
+Used in `Header.tsx` as a small crest (`h-10 lg:h-11`, `drop-shadow` for
+legibility over busy photos) to the **left** of the existing set-type
+wordmark, not standalone — the crest is full of fine linework (ribbon
+lettering, tape-measure ticks) that only reads at print size, so the clean
+Archivo/mono wordmark stays the actual legible identifier. Don't blow the
+crest up to be the sole nav identifier; don't stack it above the wordmark
+(header height is constrained). If it's ever needed elsewhere (favicon,
+footer, loading state), re-derive from `public/logo.png`, don't re-extract
+from the docx.
+
 ### Layout language
 
 Asymmetric 12-col editorial grid; oversized display headlines; small-caps mono

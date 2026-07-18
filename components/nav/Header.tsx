@@ -72,13 +72,24 @@ export default function Header() {
         }`}
       >
         <div className="mx-auto flex max-w-content items-center justify-between gap-8 px-6 py-4 lg:px-12">
-          {/* Wordmark */}
-          <Link href="/" className="group shrink-0 leading-none">
-            <span className="block font-display text-xl uppercase tracking-[0.02em]">
-              Records
-            </span>
-            <span className="mt-1 block font-mono text-[9px] uppercase tracking-[0.35em] text-smoke transition-colors duration-300 group-hover:text-magenta">
-              Fashion School
+          {/* Wordmark — crest + set type, so the name stays legible at header
+              scale even though the illustrated crest doesn't (it's full of
+              fine linework meant for print size). */}
+          <Link href="/" className="group flex shrink-0 items-center gap-3 leading-none">
+            <img
+              src="/logo.png"
+              alt=""
+              width={88}
+              height={101}
+              className="h-10 w-auto shrink-0 drop-shadow-[0_2px_4px_rgba(0,0,0,0.35)] lg:h-11"
+            />
+            <span>
+              <span className="block font-display text-xl uppercase tracking-[0.02em]">
+                Records
+              </span>
+              <span className="mt-1 block font-mono text-[9px] uppercase tracking-[0.35em] text-smoke transition-colors duration-300 group-hover:text-magenta">
+                Fashion School
+              </span>
             </span>
           </Link>
 
