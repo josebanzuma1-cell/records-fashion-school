@@ -65,6 +65,8 @@ export const primaryNav: NavSection[] = [
   {
     label: "Educational Offer",
     children: [
+      // The flagship 2½-year programme (real, from the school's profile deck).
+      { label: "Fashion Design", href: "/educational-offer/fashion-design" },
       { label: "Foundation Course", href: "/educational-offer/foundation-course" },
       { label: "Undergraduate", href: "/educational-offer/undergraduate" },
       { label: "Postgraduate", href: "/educational-offer/postgraduate" },

@@ -68,9 +68,9 @@ export default function Intro() {
         ref={copyRef}
         className="mt-10 max-w-5xl font-serif text-[clamp(1.5rem,3.1vw,2.8rem)] leading-[1.35] text-ink"
       >
-        Records Fashion School nurtures passionate people into professional
-        fashion designers — artistry and mastery, taught in the heart of
-        Kampala, to meet the evolving demands of the design market.{" "}
+        Since 2008, Records Fashion School has nurtured passionate people into
+        professional fashion designers — artistry and mastery, taught in the
+        heart of Kampala, to meet the evolving demands of the design market.{" "}
         <em className="italic text-magenta">Skills for life.</em>
       </p>
 

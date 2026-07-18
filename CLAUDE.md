@@ -9,15 +9,27 @@ Tagline / motto (confirmed from official brochure): **"Skills for Life"**.
 Flyer headline: "Unlock your creativity. Learn from the best. Kickstart your career."
 Enrollment banner: "Fashion Design — Enrollment Open".
 
-Contact (confirmed July 2026, official brochure — single source in `lib/school.ts`):
+Contact + facts (single source in `lib/school.ts` — sources: official
+brochures July 2026 + the school's profile deck "FIONA 22nd February
+2026.pptx", which is newer and supersedes the brochures where they differ):
 - Address: Lower Katwe, along Muteesa I Road, Tezira House, Second Floor, Kampala
 - Phones: +256 (0) 701 316 907 · +256 (0) 784 005 899
 - Email: info@recordsfashionschool.com · Web: www.recordsfashionschool.com
-- Socials: Facebook, X, Instagram, TikTok, YouTube — `// TODO: exact handles/URLs`
-- `// TODO: confirm founding year, student/alumni counts, accreditations.`
+  (the deck still lists the old gmail — info@ stays primary)
+- Socials: Instagram + X `@recordsfashionschoolug`, Facebook page "Records
+  Fashion School Uganda" — `// TODO: TikTok + YouTube handles, FB page URL`
+- **Established 7 July 2008** (community-based vocational institute). First
+  graduation 2010; 921 graduates to date, 91% start their own design houses.
+- `// TODO: accreditations still unconfirmed.`
 
-Brand statements (Mission / Vision / Promise / Positioning) live verbatim in
-`lib/school.ts` — never retype them inline.
+Brand statements (Mission / Vision / Promise / Positioning), Values, alumni
+design houses, the Fashion Design programme (2½ yrs, 95% practical, 5×5-month
+semesters, 732 h/semester, 3,660 h total, 105 garments, units AD111/PD112/
+GP113/FDM114) and all fees (UGX: 122,000 registration · 1,000,000/semester ·
+5,000,000 full course · 150,000 annual national exams) live verbatim in
+`lib/school.ts` — never retype them inline. NOTE: the Vision was **replaced**
+by the Feb 2026 deck ("central hub in research and innovations in garment
+design and textiles" — no longer "best university in Africa").
 
 ---
 
@@ -40,6 +52,13 @@ Educational Offer, Guidance, Student Services, Research and Third Mission
 EN toggle (`// TODO: confirm second language`). Items with children open a
 mega-menu (desktop) / accordion (mobile). Every IA item routes — dedicated
 pages graduate out of `app/[...slug]/page.tsx` (see `DEDICATED` set there).
+
+Dedicated (real-content) pages so far: About Us, Contact, **Fashion Design**
+(`/educational-offer/fashion-design` — the flagship programme, first child
+of Educational Offer; the other offer children are still aspirational stubs
+from the reference IA), Admission (requirements + downloadable application
+form at `public/apply/`), Fees and Contributions. Real campus photo at
+`public/about/campus-library.jpg` (from the profile deck).
 
 ## 2. Tech stack (do not swap without asking)
 

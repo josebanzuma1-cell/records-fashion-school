@@ -11,7 +11,13 @@ import { allRoutes, getRouteEntry } from "@/lib/navigation";
 type Params = { slug: string[] };
 
 /** Routes that have graduated to real dedicated pages under app/. */
-const DEDICATED = new Set(["/the-school/about-us", "/contact"]);
+const DEDICATED = new Set([
+  "/the-school/about-us",
+  "/contact",
+  "/educational-offer/fashion-design",
+  "/guidance/admission",
+  "/guidance/fees-and-contributions",
+]);
 
 export function generateStaticParams(): Params[] {
   return allRoutes()

@@ -65,14 +65,25 @@ export default function ContactPage() {
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.25em]">
             Follow
           </p>
-          {/* TODO: get the exact handle/URL for each social account. */}
+          {/* TODO: TikTok + YouTube handles, Facebook page URL. */}
           <ul className="mt-5 space-y-2">
-            {school.socials.map((network) => (
-              <li
-                key={network}
-                className="font-mono text-sm text-ink/70"
-              >
-                {network}
+            {school.socials.map((social) => (
+              <li key={social.name} className="font-mono text-sm text-ink/70">
+                {social.url ? (
+                  <a
+                    href={social.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="transition-colors hover:text-magenta"
+                  >
+                    {social.name} — {social.handle}
+                  </a>
+                ) : (
+                  <>
+                    {social.name}
+                    {social.handle ? ` — ${social.handle}` : ""}
+                  </>
+                )}
               </li>
             ))}
           </ul>

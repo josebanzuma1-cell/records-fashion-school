@@ -70,15 +70,26 @@ export default function Footer() {
               </a>
             </p>
 
-            {/* TODO: get the exact handle/URL for each social account —
-                rendered as inert labels until then. */}
+            {/* TODO: TikTok + YouTube handles, Facebook page URL —
+                those render as inert labels until confirmed. */}
             <ul className="mt-8 flex flex-wrap gap-x-5 gap-y-2">
-              {school.socials.map((network) => (
+              {school.socials.map((social) => (
                 <li
-                  key={network}
+                  key={social.name}
                   className="font-mono text-[10px] uppercase tracking-[0.2em] text-smoke"
                 >
-                  {network}
+                  {social.url ? (
+                    <a
+                      href={social.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="transition-colors hover:text-magenta"
+                    >
+                      {social.name}
+                    </a>
+                  ) : (
+                    social.name
+                  )}
                 </li>
               ))}
             </ul>
@@ -139,8 +150,7 @@ export default function Footer() {
 
         <div className="mt-8 flex flex-col gap-2 border-t hairline pt-6 md:flex-row md:items-center md:justify-between">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-smoke">
-            © 2026 {school.name} — {school.city}
-            {/* TODO: confirm founding year for “EST.” treatment */}
+            © 2026 {school.name} — Est. {school.foundedYear} — {school.city}
           </p>
           <a
             href={school.website}
