@@ -58,7 +58,10 @@ export default function Header() {
         dark ? "text-paper" : "text-ink"
       } ${
         solid
-          ? openMenu
+          ? // No backdrop-blur while an overlay is open: backdrop-filter makes
+            // the header a containing block, which would trap the fixed
+            // mobile menu at header height (breaking its scroll).
+            openMenu || mobileOpen
             ? "bg-paper"
             : "bg-paper/95 backdrop-blur-sm"
           : "bg-transparent"
@@ -71,23 +74,26 @@ export default function Header() {
           solid ? "hairline" : "border-transparent"
         }`}
       >
-        <div className="mx-auto flex max-w-content items-center justify-between gap-8 px-6 py-4 lg:px-12">
-          {/* Wordmark — crest + set type, so the name stays legible at header
-              scale even though the illustrated crest doesn't (it's full of
-              fine linework meant for print size). */}
-          <Link href="/" className="group flex shrink-0 items-center gap-3 leading-none">
+        <div className="mx-auto flex max-w-content items-center justify-between gap-4 px-6 py-4 lg:px-12">
+          {/* Wordmark — crest + set type on a maroon brand plate (deep
+              gown-shadow tone from the crest itself), so the lockup reads
+              identically over the dark hero and the solid paper header. */}
+          <Link
+            href="/"
+            className="group flex shrink-0 items-center gap-3 bg-maroon px-3 py-2 leading-none transition-colors duration-300 hover:bg-ink sm:px-4"
+          >
             <img
               src="/logo.png"
               alt=""
               width={88}
               height={101}
-              className="h-10 w-auto shrink-0 drop-shadow-[0_2px_4px_rgba(0,0,0,0.35)] lg:h-11"
+              className="h-9 w-auto shrink-0"
             />
             <span>
-              <span className="block font-display text-xl uppercase tracking-[0.02em]">
+              <span className="block font-display text-lg uppercase tracking-[0.02em] text-paper lg:text-xl">
                 Records
               </span>
-              <span className="mt-1 block font-mono text-[9px] uppercase tracking-[0.35em] text-smoke transition-colors duration-300 group-hover:text-magenta">
+              <span className="mt-1 block font-mono text-[8px] uppercase tracking-[0.3em] text-cream/70 transition-colors duration-300 group-hover:text-cream lg:text-[9px]">
                 Fashion School
               </span>
             </span>
@@ -95,7 +101,7 @@ export default function Header() {
 
           {/* Desktop nav */}
           <nav aria-label="Primary" className="hidden xl:block">
-            <ul className="flex items-center gap-4 xl:gap-6">
+            <ul className="flex items-center gap-3.5 2xl:gap-6">
               {primaryNav.map((section) => (
                 <li
                   key={section.label}
@@ -115,7 +121,7 @@ export default function Header() {
                           openMenu === section.label ? null : section.label,
                         )
                       }
-                      className={`whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.15em] transition-colors duration-300 hover:text-magenta xl:text-[11px] ${
+                      className={`whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.12em] transition-colors duration-300 hover:text-magenta 2xl:text-[11px] 2xl:tracking-[0.15em] ${
                         openMenu === section.label ? "text-magenta" : ""
                       }`}
                     >
@@ -124,7 +130,7 @@ export default function Header() {
                   ) : (
                     <Link
                       href={section.href!}
-                      className="whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.15em] transition-colors duration-300 hover:text-magenta xl:text-[11px]"
+                      className="whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.12em] transition-colors duration-300 hover:text-magenta 2xl:text-[11px] 2xl:tracking-[0.15em]"
                     >
                       {section.label}
                     </Link>

@@ -25,6 +25,9 @@ const config: Config = {
         // magenta is now the PRIMARY UI accent; brass stays as the warm
         // support tone carried by imagery and the 3D atelier light.
         magenta: "#C01D63",
+        // Deep gown-shadow maroon from the crest — the header logo-plate
+        // surface (a surface, not an accent; pairs with paper/cream text).
+        maroon: "#701238",
         // Logo support color — reserved, use sparingly (one accent at a time).
         teal: "#1F6F6D",
       },

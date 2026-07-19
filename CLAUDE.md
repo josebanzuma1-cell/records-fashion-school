@@ -96,6 +96,7 @@ The UI accent is the school's real brand magenta.
 | `cream`    | `#E9E1D0` | Dividers, muted fills, Magazine panel                |
 | `smoke`    | `#8A8A86` | Muted labels, captions, meta                         |
 | `magenta`  | `#C01D63` | **PRIMARY accent** (real brand color from the logo)  |
+| `maroon`   | `#701238` | Header logo-plate surface (a surface, not an accent) |
 | `teal`     | `#1F6F6D` | Logo support color — reserved, use sparingly         |
 
 Rules: one accent at a time — `magenta` for UI (hover, highlights, CTA);
@@ -113,15 +114,26 @@ docx (the school's brand-asset folder is
 machine) and background-keyed from white to transparent so it sits cleanly
 on both the solid paper header and the transparent/photo hero header state.
 
-Used in `Header.tsx` as a small crest (`h-10 lg:h-11`, `drop-shadow` for
-legibility over busy photos) to the **left** of the existing set-type
-wordmark, not standalone — the crest is full of fine linework (ribbon
-lettering, tape-measure ticks) that only reads at print size, so the clean
-Archivo/mono wordmark stays the actual legible identifier. Don't blow the
-crest up to be the sole nav identifier; don't stack it above the wordmark
-(header height is constrained). If it's ever needed elsewhere (favicon,
-footer, loading state), re-derive from `public/logo.png`, don't re-extract
-from the docx.
+Used in `Header.tsx` as a small crest to the **left** of the set-type
+wordmark, both sitting on a `bg-maroon` brand plate (user-requested,
+2026-07-19; the maroon is the crest gown's shadow tone) with paper/cream
+text so the lockup reads identically over the dark hero and the solid
+paper header. Hover darkens the plate to ink. The crest is full of fine
+linework that only reads at print size, so the wordmark stays the legible
+identifier — don't blow the crest up or stack it above the wordmark. If
+it's ever needed elsewhere (favicon, footer, loading state), re-derive
+from `public/logo.png`, don't re-extract from the docx.
+
+**Header layout hazards (learned the hard way):**
+- Never leave `backdrop-blur` on the header while the mobile overlay is
+  open — `backdrop-filter` turns the header into a containing block and
+  traps the `fixed` overlay at header height (menu can't scroll). The
+  class logic in `Header.tsx` switches to plain `bg-paper` whenever an
+  overlay is open; keep it that way.
+- The nav row (plate + 7 labels + Enroll pill) is width-critical between
+  1280–1536: labels run `text-[10px] tracking-[0.12em]` with `gap-3.5`
+  until `2xl`, then relax. Re-measure at exactly 1280 after any change
+  that widens the row.
 
 ### Layout language
 
