@@ -7,6 +7,8 @@ type PillLinkProps = {
   /** outline inherits currentColor (works on dark + light); solid is the magenta CTA. */
   variant?: "outline" | "solid";
   className?: string;
+  /** For file links: save instead of navigating (anchor download attribute). */
+  download?: boolean;
 };
 
 export default function PillLink({
@@ -14,6 +16,7 @@ export default function PillLink({
   children,
   variant = "outline",
   className = "",
+  download,
 }: PillLinkProps) {
   const base =
     "inline-flex items-center justify-center rounded-full px-6 py-3 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors duration-300";
@@ -23,7 +26,11 @@ export default function PillLink({
   };
 
   return (
-    <Link href={href} className={`${base} ${variants[variant]} ${className}`}>
+    <Link
+      href={href}
+      download={download}
+      className={`${base} ${variants[variant]} ${className}`}
+    >
       {children}
     </Link>
   );

@@ -51,7 +51,7 @@ export default function OfferSection() {
             </p>
             <div data-reveal className="mt-10">
               <Magnetic>
-                <PillLink href="/guidance/admission" variant="solid">
+                <PillLink href="/apply" variant="solid">
                   Enroll Now
                 </PillLink>
               </Magnetic>

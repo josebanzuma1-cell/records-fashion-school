@@ -136,7 +136,7 @@ export default function Header() {
 
           <div className="hidden shrink-0 xl:block">
             <Magnetic strength={0.25}>
-              <PillLink href="/guidance/admission">Enroll Now</PillLink>
+              <PillLink href="/apply">Enroll Now</PillLink>
             </Magnetic>
           </div>
 

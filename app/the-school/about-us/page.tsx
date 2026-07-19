@@ -159,7 +159,7 @@ export default function AboutUsPage() {
             <PillLink href="/educational-offer/fashion-design" variant="solid">
               The Fashion Design Programme
             </PillLink>
-            <PillLink href="/guidance/admission">Enroll Now</PillLink>
+            <PillLink href="/apply">Apply Now</PillLink>
           </div>
         </div>
       </div>

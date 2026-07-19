@@ -56,9 +56,16 @@ pages graduate out of `app/[...slug]/page.tsx` (see `DEDICATED` set there).
 Dedicated (real-content) pages so far: About Us, Contact, **Fashion Design**
 (`/educational-offer/fashion-design` — the flagship programme, first child
 of Educational Offer; the other offer children are still aspirational stubs
-from the reference IA), Admission (requirements + downloadable application
-form at `public/apply/`), Fees and Contributions. Real campus photo at
-`public/about/campus-library.jpg` (from the profile deck).
+from the reference IA), Admission (requirements, funnels to /apply), Fees
+and Contributions, and **/apply** (outside the IA tree, like /contact):
+downloadable official form (PDF + Word at `public/forms/`) plus an online
+application that mirrors the paper form's Sections A/B/C and POSTs directly
+to **Web3Forms** — no backend, no API route. Access key comes from
+`NEXT_PUBLIC_WEB3FORMS_KEY` (see `.env.example` + README; destination inbox
+lives in the Web3Forms dashboard, never in code; page degrades gracefully
+when the key is unset). All "Enroll Now / Apply Now" CTAs point to /apply.
+Real campus photo at `public/about/campus-library.jpg` (from the profile
+deck).
 
 ## 2. Tech stack (do not swap without asking)
 

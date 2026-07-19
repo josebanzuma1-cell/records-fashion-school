@@ -179,8 +179,8 @@ export default function FashionDesignPage() {
             .
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
-            <PillLink href="/guidance/admission" variant="solid">
-              Enroll Now
+            <PillLink href="/apply" variant="solid">
+              Apply Now
             </PillLink>
             <PillLink href="/guidance/open-day">Book an Open Day</PillLink>
           </div>

@@ -57,14 +57,18 @@ export default function AdmissionPage() {
         <p className="eyebrow lg:col-span-4">Apply</p>
         <div className="lg:col-span-8">
           <p className="max-w-xl font-mono text-sm leading-relaxed text-ink/70">
-            Download the application form, fill it in, and hand it to the
-            registrar at Tezira House with your requirements — or ask for a
-            copy at the front desk. {school.fees.currencyNote}
+            Apply online and your application goes straight to admissions —
+            or download the official form, fill it in, and hand it to the
+            registrar at Tezira House with your requirements.{" "}
+            {school.fees.currencyNote}
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
+            <PillLink href="/apply" variant="solid">
+              Apply Online
+            </PillLink>
             <PillLink
-              href="/apply/records-fashion-school-application-form.pdf"
-              variant="solid"
+              href="/forms/records-fashion-school-application-form.pdf"
+              download
             >
               Download Application Form
             </PillLink>

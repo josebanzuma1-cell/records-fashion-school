@@ -145,7 +145,7 @@ export default function Hero() {
           </div>
           <div data-hero-fade className="flex shrink-0 gap-4">
             <Magnetic>
-              <PillLink href="/guidance/admission" variant="solid">
+              <PillLink href="/apply" variant="solid">
                 Enroll Now
               </PillLink>
             </Magnetic>
