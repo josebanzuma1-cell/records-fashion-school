@@ -14,7 +14,9 @@ import { school } from "@/lib/school";
  * destination inbox is configured in the Web3Forms dashboard, not in code.
  */
 
-const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
+// Strip BOM/whitespace — Windows shell pipes can smuggle a U+FEFF into the
+// stored env value, and Web3Forms rejects the key as an invalid UUID.
+const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY?.replace(/^\uFEFF/, "").trim();
 const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
 
 const MAX_FILE_BYTES = 5 * 1024 * 1024; // ~5MB per attachment
