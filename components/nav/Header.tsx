@@ -82,13 +82,17 @@ export default function Header() {
             href="/"
             className="group flex shrink-0 items-center gap-3 bg-maroon px-3 py-2 leading-none transition-colors duration-300 hover:bg-ink sm:px-4"
           >
-            <img
-              src="/logo.png"
-              alt=""
-              width={88}
-              height={101}
-              className="h-9 w-auto shrink-0"
-            />
+            {/* Crest on a paper tile — the artwork was drawn for a light
+                ground; straight on maroon its linework disappears. */}
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center bg-paper p-0.5 lg:h-10 lg:w-10">
+              <img
+                src="/logo.png"
+                alt=""
+                width={88}
+                height={101}
+                className="max-h-full w-auto"
+              />
+            </span>
             <span>
               <span className="block font-display text-lg uppercase tracking-[0.02em] text-paper lg:text-xl">
                 Records
@@ -101,7 +105,7 @@ export default function Header() {
 
           {/* Desktop nav */}
           <nav aria-label="Primary" className="hidden xl:block">
-            <ul className="flex items-center gap-3.5 2xl:gap-6">
+            <ul className="flex items-center gap-3 2xl:gap-6">
               {primaryNav.map((section) => (
                 <li
                   key={section.label}

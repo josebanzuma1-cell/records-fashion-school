@@ -13,6 +13,7 @@ type Params = { slug: string[] };
 /** Routes that have graduated to real dedicated pages under app/. */
 const DEDICATED = new Set([
   "/the-school/about-us",
+  "/the-school/companies-and-partners",
   "/contact",
   "/educational-offer/fashion-design",
   "/guidance/admission",

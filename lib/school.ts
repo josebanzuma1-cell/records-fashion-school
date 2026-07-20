@@ -93,6 +93,32 @@ export const school = {
     "Tina Ku Wuzi",
   ],
 
+  /** Companies and partners (user-confirmed 2026-07-19; abouts researched
+   *  from each partner's own site / public coverage — keep factual). */
+  partners: [
+    {
+      name: "BUZIGAHILL",
+      location: "Kampala, Uganda",
+      about:
+        "Clothing brand founded in Kampala in 2021 by designer Bobby Kolade. BUZIGAHILL upcycles second-hand clothes that arrive in Uganda and redistributes them to the Global North under its Return to Sender project — every piece unique, cut apart and rebuilt in its Kampala studio.",
+      url: "https://buzigahill.com",
+    },
+    {
+      name: "IGC Fashion",
+      location: "Kampala, Uganda",
+      about:
+        "Experimental Kampala label established in 2017 by Kasoma Ibrahim and Katende Godfrey, merging historical African craft with modern urban design — barkcloth, raffia, sisal and other overlooked materials worked on zero-waste principles — and sharing skills through its grassroots Fashion Cypher workshops.",
+      url: "https://www.igcfashion.africa",
+    },
+    {
+      name: "Stella Atal",
+      location: "Kampala · Paris",
+      about:
+        "Ugandan painter and fashion designer, founder of the Atal Stella fashion house, now based in Paris. A pioneer of eco-fashion built on local, natural and recycled materials, she was named African Designer of the Year at the 2008 Ethical Fashion Awards in London and has shown from Africa Fashion Week New York to Green Fashion Switzerland.",
+      url: "https://en.wikipedia.org/wiki/Stella_Atal",
+    },
+  ],
+
   /** The flagship programme (profile deck "Course Break Down"). */
   program: {
     name: "Fashion Design",

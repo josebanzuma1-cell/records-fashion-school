@@ -35,7 +35,7 @@ const AFFIRMATION =
 /** The paper form's checklist, shown as guidance beside the uploads. */
 const DOCUMENT_CHECKLIST = [
   "Certificate showing achievement of at least secondary school or the equivalent.",
-  "Two or three personal/self-taught projects to assess your passion and competence.",
+  "Two or three personal/self-taught projects to assess your passion and competence (optional).",
   "Six (6) full-colour passport-size photos.",
   "Admission processing fees of Ug. Shs. 122,000/=.",
 ];
@@ -435,8 +435,7 @@ export default function ApplicationForm() {
           {UPLOADS.map((upload) => (
             <div key={upload.id}>
               <label htmlFor={upload.id} className={labelClass}>
-                {upload.label}{" "}
-                <span className="normal-case text-smoke">(optional)</span>
+                {upload.label}
               </label>
               <input
                 id={upload.id}

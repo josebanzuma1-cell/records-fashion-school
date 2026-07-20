@@ -53,7 +53,10 @@ EN toggle (`// TODO: confirm second language`). Items with children open a
 mega-menu (desktop) / accordion (mobile). Every IA item routes — dedicated
 pages graduate out of `app/[...slug]/page.tsx` (see `DEDICATED` set there).
 
-Dedicated (real-content) pages so far: About Us, Contact, **Fashion Design**
+Dedicated (real-content) pages so far: About Us, Companies and Partners
+(BUZIGAHILL, IGC Fashion, Stella Atal — user-confirmed partners, abouts
+researched from public sources, data in `lib/school.ts` `partners`),
+Contact, **Fashion Design**
 (`/educational-offer/fashion-design` — the flagship programme, first child
 of Educational Offer; the other offer children are still aspirational stubs
 from the reference IA), Admission (requirements, funnels to /apply), Fees

@@ -83,7 +83,7 @@ export default function FashionDesignPage() {
           <p className="flex items-baseline gap-4">
             <span className="font-serif text-2xl italic text-magenta">02</span>
             <span className="font-mono text-[11px] font-bold uppercase tracking-[0.25em]">
-              Stage Two — Creation
+              Stage Two — 1 Year — Creation
             </span>
           </p>
           <p className="mt-5 font-mono text-sm leading-relaxed text-ink/80">
