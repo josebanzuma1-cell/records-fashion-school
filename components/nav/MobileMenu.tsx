@@ -27,7 +27,7 @@ export default function MobileMenu({ onClose }: MobileMenuProps) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: DUR.micro, ease: EASE }}
-      className="fixed inset-0 z-40 overflow-y-auto bg-paper pb-16 pt-28 text-ink xl:hidden"
+      className="fixed inset-0 z-40 overflow-y-auto bg-paper pb-16 pt-36 text-ink xl:hidden"
       data-cursor-theme="light"
       data-lenis-prevent
     >

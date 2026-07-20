@@ -449,7 +449,7 @@ export default function ApplicationForm() {
                 className="mt-3 block w-full font-mono text-xs text-ink/70 file:mr-4 file:cursor-pointer file:border file:border-ink/30 file:bg-transparent file:px-4 file:py-2 file:font-mono file:text-[11px] file:uppercase file:tracking-[0.15em] file:text-ink file:transition-colors hover:file:border-magenta hover:file:text-magenta"
               />
               <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.1em] text-smoke">
-                PDF, Word, JPG or PNG · up to 5MB
+                PDF, Word, JPG or PNG · up to 5MB · Optional
               </p>
               <FieldError
                 id={`${upload.id}-error`}

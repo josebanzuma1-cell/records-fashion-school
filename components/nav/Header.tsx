@@ -80,11 +80,11 @@ export default function Header() {
               identically over the dark hero and the solid paper header. */}
           <Link
             href="/"
-            className="group flex shrink-0 items-center gap-3 bg-maroon px-3 py-2 leading-none transition-colors duration-300 hover:bg-ink sm:px-4"
+            className="group flex shrink-0 items-center gap-2.5 bg-maroon px-3 py-2 leading-none transition-colors duration-300 hover:bg-ink sm:px-3.5"
           >
             {/* Crest on a paper tile — the artwork was drawn for a light
                 ground; straight on maroon its linework disappears. */}
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center bg-paper p-0.5 lg:h-10 lg:w-10">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center bg-paper p-0.5 lg:h-12 lg:w-12">
               <img
                 src="/logo.png"
                 alt=""
