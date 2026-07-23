@@ -82,6 +82,17 @@ Package manager: **npm** (pnpm was specified but its store needs symlink
 permissions this Windows machine doesn't grant; switch back only if Developer
 Mode is enabled). Node 18+.
 
+**Static export** (`next.config.ts`: `output: "export"`, `trailingSlash:
+true`, added 2026-07-19 for Hostinger hosting): `npm run build` writes a
+fully static, server-less deployable site to `out/` (~380 files, ~6MB) —
+plain HTML/CSS/JS, no Node.js runtime needed wherever it's hosted. This
+works because the site has zero API routes, middleware, server actions, or
+`next/image` calls; **adding any of those would break the static export**,
+so don't, without first checking this note and discussing the tradeoff.
+Vercel still deploys the same repo fine (it serves exported output
+natively) — the two hosting targets are not in tension. See README for the
+Hostinger upload steps.
+
 ## 3. Art direction
 
 Warm editorial minimalism. Paper base, ink text, photography carries color.
