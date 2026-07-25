@@ -13,6 +13,15 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  {
+    rules: {
+      // This site ships as a static export to plain file hosting (see
+      // CLAUDE.md §2 / next.config.ts), so next/image's optimisation
+      // pipeline isn't available and raw <img> is the deliberate choice
+      // throughout. The rule would flag every image on every build.
+      "@next/next/no-img-element": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;

@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3005",
     "build": "next build",
-    "start": "next start",
+    "preview": "npx --yes serve out -p 3006",
+    "check": "tsc --noEmit && eslint",
+    "clean": "node -e \"fs.rmSync('.next',{recursive:true,force:true});fs.rmSync('out',{recursive:true,force:true})\"",
     "lint": "eslint"
   },
   "dependencies": {

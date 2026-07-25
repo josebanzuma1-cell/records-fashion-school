@@ -83,15 +83,32 @@ permissions this Windows machine doesn't grant; switch back only if Developer
 Mode is enabled). Node 18+.
 
 **Static export** (`next.config.ts`: `output: "export"`, `trailingSlash:
-true`, added 2026-07-19 for Hostinger hosting): `npm run build` writes a
-fully static, server-less deployable site to `out/` (~380 files, ~6MB) —
-plain HTML/CSS/JS, no Node.js runtime needed wherever it's hosted. This
-works because the site has zero API routes, middleware, server actions, or
-`next/image` calls; **adding any of those would break the static export**,
-so don't, without first checking this note and discussing the tradeoff.
-Vercel still deploys the same repo fine (it serves exported output
-natively) — the two hosting targets are not in tension. See README for the
-Hostinger upload steps.
+true`, added 2026-07-19): `npm run build` writes a fully static,
+server-less site to `out/` (~383 files, ~6MB) — plain HTML/CSS/JS, no
+Node.js runtime on the host. This works because the site has zero API
+routes, middleware, server actions, or `next/image` calls; **adding any of
+those breaks the static export**, so don't, without discussing the tradeoff
+first. (`@next/next/no-img-element` is switched off in `eslint.config.mjs`
+for exactly this reason — raw `<img>` is deliberate here.)
+
+**Deployment: Hostinger via GitHub (Vercel retired 2026-07-19).**
+Push to `main` → GitHub Actions (`.github/workflows/deploy.yml`) builds →
+publishes `out/` to the **`deploy` branch** → Hostinger Git pulls that
+branch into `public_html`. Key facts:
+- `deploy` is machine-written build output. **Never hand-edit or commit to
+  it**, and never point Hostinger at `main` (Hostinger only runs `git pull`,
+  never `npm run build`, so `main` would deploy raw source).
+- The workflow must keep `deploy`'s history linear — it clones and commits
+  on top rather than force-pushing an orphan, because a rewritten history
+  breaks Hostinger's server-side `git pull`.
+- `NEXT_PUBLIC_WEB3FORMS_KEY` must exist as a **GitHub Actions secret**, not
+  just in local `.env.local` — it's inlined at build time and CI does its own
+  build. Without it the site still deploys but `/apply`'s online form goes
+  inactive.
+- `public/.htaccess` (404 page, caching, compression) is served from
+  `public/` so the export copies it to the web root. Don't move it to the
+  repo root — it would never reach the server.
+See README "Deploying" for the hPanel setup and troubleshooting.
 
 ## 3. Art direction
 

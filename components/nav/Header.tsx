@@ -29,8 +29,11 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close overlays on route change
+  // Close overlays on route change. Intentionally a post-navigation reset:
+  // the menus are transient UI, not state derivable from the route, so
+  // there's nothing to lift or key off instead.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- see above
     setOpenMenu(null);
     setMobileOpen(false);
   }, [pathname]);

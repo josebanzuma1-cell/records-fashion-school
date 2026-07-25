@@ -7,8 +7,20 @@ Next.js (App Router) site for Records Fashion School, Kampala. Read
 
 ```bash
 npm install
-npm run dev   # runs on the port you pass with -p (project convention: 3005)
+npm run dev
 ```
+
+| Command           | What it does                                                     |
+| ----------------- | ---------------------------------------------------------------- |
+| `npm run dev`     | Dev server on <http://localhost:3005>                             |
+| `npm run build`   | Static export → `out/` (this is what gets deployed)               |
+| `npm run preview` | Serves the built `out/` on :3006 — the *real* deployed artifact   |
+| `npm run check`   | TypeScript + ESLint                                               |
+| `npm run clean`   | Removes `.next/` and `out/`                                       |
+
+Before pushing anything visual, `npm run build && npm run preview` is the
+honest check — it exercises the exported static files rather than the dev
+server, which is what visitors actually get.
 
 ## Online application form (`/apply`) — Web3Forms
 
@@ -57,49 +69,101 @@ processing fee. These happen at the office (Lower Katwe, along Muteesa I
 Road, Tezira House, Second Floor, Kampala) or as arranged with admissions —
 the page and the post-submission screen both say so.
 
-## Deploying
+## Deploying (Hostinger, via GitHub)
 
-### Vercel (current production)
+**Day to day, deploying is just: commit and push to `main`.** Everything
+below is the one-time wiring that makes that true.
 
-CLI-driven (not git-integrated): `vercel deploy --prod --yes --scope zym1`.
-Production alias: <https://records-fashion-school.vercel.app>.
+### How it works
 
-### Hostinger (or any plain file host)
+```
+you push to main
+      ↓
+GitHub Actions  (.github/workflows/deploy.yml)
+  installs deps → npm run build → static site in out/
+      ↓
+publishes those files to the `deploy` branch (site files at branch root)
+      ↓
+Hostinger Git pulls `deploy` into public_html
+```
 
-The site builds to a fully static export — no Node.js needed on the server
-at all, so it works on Hostinger's cheapest shared plan just as well as a
-VPS. There's nothing Hostinger-specific to configure; this is true of any
-plain web host (any shared hosting, Netlify's "drop a folder", S3+CloudFront, etc).
+Two branches, two different jobs:
 
-1. **Set the live Web3Forms key before building** — it's a
-   `NEXT_PUBLIC_*` variable, so it gets baked into the JS at build time.
-   There's no server on Hostinger to read `.env.local` afterwards, so if
-   the key is ever missing or wrong at build time, the only fix is
-   rebuilding and re-uploading (see step 4). Confirm `.env.local` has the
-   real key before running the build.
-2. Build: `npm run build`. Output lands in `out/` (~380 files, ~6MB) —
-   plain HTML/CSS/JS.
-3. Zip the **contents** of `out/` (not the folder itself — you want
-   `index.html` etc. at the zip's top level, not inside an `out/`
-   subfolder).
-4. In Hostinger's hPanel: File Manager → open `public_html` (or the
-   subdomain's folder if deploying to a subdomain) → delete Hostinger's
-   default placeholder files if present → Upload → pick the zip → once
-   uploaded, right-click it → Extract, into `public_html`.
-   (An FTP client such as FileZilla, pointed at the FTP credentials in
-   hPanel, works the same way — upload the contents of `out/` to
-   `public_html`.)
-5. Custom 404 page: `out/404.html` is already there. Most Hostinger
-   plans auto-detect it; if not, hPanel → Website → Error Pages lets you
-   point 404s at `/404.html`.
-6. **To publish any future change**: repeat steps 1–4 — edit code, build,
-   re-zip, re-upload. There's no git integration or auto-deploy on this
-   path (unlike Vercel), so nothing updates until you manually re-upload.
+| Branch   | Holds                    | Who writes it            |
+| -------- | ------------------------ | ------------------------ |
+| `main`   | Source code              | You                      |
+| `deploy` | Built HTML/CSS/JS        | GitHub Actions — **never edit or commit here by hand** |
 
-Domain note: if `recordsfashionschool.com` (or whatever domain) already
-points at Vercel and you want Hostinger to serve the live site instead,
-you'll update the domain's DNS (or nameservers) in whichever registrar
-holds it — that's a DNS change, not something in this repo, and it can
-take a few hours to propagate. Keeping both running (Vercel on the main
-domain, Hostinger on a subdomain for testing) is fine and needs no DNS
-change beyond adding the subdomain.
+The split exists because **Hostinger's Git integration only runs `git pull`** —
+it does not run `npm install` or `npm run build`. So the branch it tracks has
+to already contain the finished site at its root. Keeping that out of `main`
+keeps the source history clean.
+
+### One-time setup
+
+**1. Add the application-form key to GitHub** (skip and `/apply` still
+deploys, but its online form shows "not activated"):
+
+Repo → Settings → Secrets and variables → Actions → New repository secret
+- Name: `NEXT_PUBLIC_WEB3FORMS_KEY`
+- Value: the Web3Forms access key (same one in your local `.env.local`)
+
+This is needed because `NEXT_PUBLIC_*` values are compiled into the
+JavaScript at build time — there's no server on Hostinger to read them
+later.
+
+**2. Let the first deploy run.** Push anything to `main` (or Actions tab →
+"Build and publish to Hostinger" → Run workflow). This creates the `deploy`
+branch. It won't exist until then, and step 3 needs it to exist.
+
+**3. Point Hostinger at the `deploy` branch.** hPanel → Advanced → GIT:
+- Repository: `https://github.com/josebanzuma1-cell/records-fashion-school`
+- Branch: **`deploy`** ← not `main`
+- Directory: `public_html` (leave blank if it defaults there)
+
+Then hit **Deploy** once to pull the first copy.
+
+**4. (Optional but recommended) Make Hostinger pull automatically.** In that
+same hPanel Git section, copy the **Auto Deployment webhook URL**, then add
+it to GitHub as a secret named `HOSTINGER_DEPLOY_WEBHOOK`. The workflow
+pings it after each publish, so the site updates within seconds instead of
+waiting for you to click Deploy.
+
+### After setup — the everyday loop
+
+```bash
+# edit code
+npm run build && npm run preview   # optional: check the real built output
+git add -A
+git commit -m "Update fees for 2027 intake"
+git push
+```
+
+Then watch the **Actions** tab. Green check = published. If you added the
+webhook, the live site follows within seconds; otherwise click Deploy in
+hPanel.
+
+### Troubleshooting
+
+- **Site didn't change** → Check the Actions tab first. Red X = build broke,
+  and the click into the failed step shows why. Green check but stale site =
+  Hostinger hasn't pulled; click Deploy in hPanel (or set up the webhook).
+- **`/apply` form says "not activated"** → `NEXT_PUBLIC_WEB3FORMS_KEY` secret
+  is missing or misspelled in GitHub. Fix it, then re-run the workflow — a
+  secret change alone doesn't trigger a rebuild.
+- **A page 404s on Hostinger but works locally** → confirm `public/.htaccess`
+  made it into `public_html`. Some FTP/file managers hide dotfiles by default.
+- **Deploy branch history got tangled** (rare — e.g. someone force-pushed):
+  delete the `deploy` branch on GitHub, re-run the workflow to recreate it,
+  then in hPanel remove and re-add the repository.
+
+### Notes
+
+- **Don't add API routes, middleware, server actions, or `next/image`** — the
+  static export depends on their absence (see `CLAUDE.md` §2). The build will
+  fail loudly rather than silently ship something broken.
+- Domain/DNS is separate from this repo: pointing `recordsfashionschool.com`
+  at Hostinger is done at whichever registrar holds the domain, and takes a
+  few hours to propagate.
+- `out/` and `.next/` are gitignored on `main` by design — build artifacts
+  belong on `deploy`, not in source history.

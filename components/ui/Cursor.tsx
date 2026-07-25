@@ -19,8 +19,12 @@ export default function Cursor() {
   const [active, setActive] = useState(false);
 
   useEffect(() => {
+    // Client-only capability check: `window` doesn't exist while the page is
+    // pre-rendered for the static export, so this can't be computed during
+    // render or as initial state — it has to land after mount.
     const fine = window.matchMedia("(pointer: fine)").matches;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- see above
     if (fine && !reduced) setActive(true);
   }, []);
 

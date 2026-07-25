@@ -1,0 +1,118 @@
+name: Build and publish to Hostinger
+
+# Push to main -> this builds the static site and publishes the result to the
+# `deploy` branch. Hostinger's Git integration tracks `deploy` and pulls it
+# into public_html (see README "Deploying" for the one-time hPanel setup).
+#
+# Why a separate branch: Hostinger's Git deploy runs `git pull` only -- it does
+# NOT run `npm install` or `npm run build`. So the branch it tracks has to hold
+# the finished HTML/CSS/JS at its root. `main` stays clean source-only.
+
+on:
+  push:
+    branches: [main]
+  # Lets you re-deploy from the Actions tab without pushing a code change.
+  workflow_dispatch:
+
+# Never let two deploys race each other onto the same branch.
+concurrency:
+  group: deploy-hostinger
+  cancel-in-progress: false
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # needed to push the built site to the `deploy` branch
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Warn if the application-form key is missing
+        env:
+          FORM_KEY: ${{ secrets.NEXT_PUBLIC_WEB3FORMS_KEY }}
+        run: |
+          if [ -z "$FORM_KEY" ]; then
+            echo "::warning title=Web3Forms key missing::NEXT_PUBLIC_WEB3FORMS_KEY is not set in repository secrets. The site will still deploy, but the online application form on /apply will show 'online submission not activated' and applicants will be pointed at the downloadable form instead. Fix: repo Settings > Secrets and variables > Actions > New repository secret."
+          else
+            echo "Web3Forms key present - /apply online submissions will be live."
+          fi
+
+      - name: Build static site
+        env:
+          # NEXT_PUBLIC_* values are inlined into the client bundle at build
+          # time. There is no server on Hostinger to read env vars at runtime,
+          # so this must be present HERE or the form ships inactive.
+          NEXT_PUBLIC_WEB3FORMS_KEY: ${{ secrets.NEXT_PUBLIC_WEB3FORMS_KEY }}
+        run: npm run build
+
+      - name: Sanity-check the export
+        run: |
+          test -f out/index.html || { echo "::error::out/index.html missing - the export did not produce a site."; exit 1; }
+          test -f out/404.html   || echo "::warning::out/404.html missing."
+          echo "Exported $(find out -type f | wc -l) files, $(du -sh out | cut -f1) total."
+
+      - name: Publish to deploy branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          REPO_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          WORK="$(mktemp -d)"
+
+          git config --global user.name  "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Reuse the existing deploy branch so history stays linear -- Hostinger
+          # pulls this branch, and a force-pushed/orphaned history would make its
+          # `git pull` fail on the server.
+          if git ls-remote --exit-code --heads "$REPO_URL" deploy >/dev/null 2>&1; then
+            git clone --branch deploy --single-branch --depth 1 "$REPO_URL" "$WORK"
+          else
+            echo "No deploy branch yet - creating it."
+            git clone --depth 1 "$REPO_URL" "$WORK"
+            git -C "$WORK" checkout --orphan deploy
+            git -C "$WORK" rm -rf --quiet . || true
+          fi
+
+          # Replace the tracked tree wholesale so deleted pages don't linger.
+          find "$WORK" -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+          cp -R out/. "$WORK"/
+
+          cd "$WORK"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "Build output identical to the last deploy - nothing to push."
+            exit 0
+          fi
+          git commit -m "Deploy ${GITHUB_SHA::7}: ${GITHUB_REF_NAME}"
+          git push origin deploy
+          echo "Published to deploy branch."
+
+      - name: Ping Hostinger auto-deploy webhook
+        # Optional. Add HOSTINGER_DEPLOY_WEBHOOK (hPanel > Advanced > GIT >
+        # Auto Deployment) as a repo secret and Hostinger pulls immediately;
+        # without it the site updates when you click Deploy in hPanel.
+        #
+        # The empty-check lives in the script, not in `if:` -- the `secrets`
+        # context isn't available to step-level conditionals.
+        env:
+          WEBHOOK: ${{ secrets.HOSTINGER_DEPLOY_WEBHOOK }}
+        run: |
+          if [ -z "${WEBHOOK:-}" ]; then
+            echo "No HOSTINGER_DEPLOY_WEBHOOK secret set - skipping."
+            echo "The deploy branch is updated; pull it from hPanel > Advanced > GIT > Deploy."
+            exit 0
+          fi
+          curl --fail --silent --show-error --location "$WEBHOOK" >/dev/null
+          echo "Hostinger pull triggered."
