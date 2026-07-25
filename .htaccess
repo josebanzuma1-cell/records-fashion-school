@@ -1,0 +1,51 @@
+# Server config for Hostinger (Apache / LiteSpeed).
+#
+# This file lives in public/ so `next build` copies it to out/ automatically,
+# which means it ends up at the web root on deploy. Don't move it to the repo
+# root -- it would never reach the server.
+#
+# Note: clean URLs need no rewrite rules here. The site is exported with
+# trailingSlash, so /apply is a real directory (out/apply/index.html) and
+# Apache's DirectoryIndex serves it natively.
+
+# --- Custom error page -------------------------------------------------------
+ErrorDocument 404 /404.html
+
+# --- Compression -------------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# --- Caching -----------------------------------------------------------------
+<IfModule mod_headers.c>
+  # Next.js fingerprints these filenames, so a long immutable cache is safe:
+  # a new build produces new filenames rather than changing old ones.
+  <FilesMatch "\.(js|css|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # HTML must revalidate, or visitors keep seeing the previous deploy.
+  <FilesMatch "\.html$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+
+  # Images/PDFs change rarely but aren't fingerprinted - cache a day.
+  <FilesMatch "\.(jpg|jpeg|png|svg|ico|webp|pdf|docx)$">
+    Header set Cache-Control "public, max-age=86400"
+  </FilesMatch>
+
+  # Basic hardening.
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# --- HTTPS -------------------------------------------------------------------
+# Uncomment once the domain is live on Hostinger with SSL issued, to force
+# https:// . Leaving it off until then avoids redirect loops during setup.
+# <IfModule mod_rewrite.c>
+#   RewriteEngine On
+#   RewriteCond %{HTTPS} off
+#   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# </IfModule>
