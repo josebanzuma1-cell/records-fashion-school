@@ -1,12 +1,23 @@
-# Server config for Hostinger (Apache / LiteSpeed).
+# OPTIONAL server config for Hostinger (Apache / LiteSpeed).
 #
-# This file lives in public/ so `next build` copies it to out/ automatically,
-# which means it ends up at the web root on deploy. Don't move it to the repo
-# root -- it would never reach the server.
+# NOT ACTIVE, on purpose. The deployment confirmed working on Hostinger did
+# not contain an .htaccess, so it was pulled out of the build to keep the
+# deployed tree byte-identical to the known-good one. The site works fine
+# without it -- everything below is polish (custom 404, caching,
+# compression), never required.
 #
-# Note: clean URLs need no rewrite rules here. The site is exported with
-# trailingSlash, so /apply is a real directory (out/apply/index.html) and
-# Apache's DirectoryIndex serves it natively.
+# TO ENABLE, once the site is confirmed live and stable:
+#   1. Copy this file to  public/.htaccess
+#   2. Commit and push -- the export copies public/ to the web root, so it
+#      lands as /.htaccess on the server.
+#   3. Load the site straight away. If anything 403s or 500s, delete
+#      public/.htaccess, push again, and the site recovers.
+# If a directive turns out to be unsupported on the plan, add the blocks
+# back one at a time (start with just ErrorDocument) to isolate it.
+#
+# Note: clean URLs need no rewrite rules. The site is exported with
+# trailingSlash, so /apply is a real directory (apply/index.html) and the
+# server's DirectoryIndex serves it natively.
 
 # --- Custom error page -------------------------------------------------------
 ErrorDocument 404 /404.html

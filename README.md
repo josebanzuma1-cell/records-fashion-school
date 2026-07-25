@@ -143,11 +143,51 @@ Then watch the **Actions** tab. Green check = published. If you added the
 webhook, the live site follows within seconds; otherwise click Deploy in
 hPanel.
 
+### Deployed layout (what Hostinger expects)
+
+`public_html` must contain the site's **contents at its top level** — not a
+folder holding them:
+
+```
+public_html/
+├── index.html        ← must be here, at the root
+├── 404.html
+├── logo.png
+├── _next/            ← JS + CSS
+├── apply/index.html  ← every page is a folder with an index.html
+├── the-school/...
+└── forms/            ← downloadable application form
+```
+
+`npm run build` already produces exactly this inside `out/`, and the
+`deploy` branch's root is exactly this too. So whichever route you use —
+Git pull or manual upload — the rule is the same: **the contents of `out/`
+go directly into `public_html`.** If you end up with
+`public_html/out/index.html`, the site 403s; move the files up one level.
+
+### Manual deploy (fallback, no local build needed)
+
+If the Git pull ever misbehaves and you need the site up now:
+
+1. Actions tab → the latest successful run → **Artifacts** →
+   download **`site-for-hostinger`**.
+2. hPanel → File Manager → `public_html` → delete what's there.
+3. Upload the zip → right-click → **Extract**.
+
+The artifact is built by the same pipeline, so it's identical to what the
+Git route would deploy — including the live application-form key.
+
 ### Troubleshooting
 
 - **Site didn't change** → Check the Actions tab first. Red X = build broke,
   and the click into the failed step shows why. Green check but stale site =
   Hostinger hasn't pulled; click Deploy in hPanel (or set up the webhook).
+- **Homepage 403s but images load** → `index.html` isn't in `public_html`,
+  so the server has nothing to serve for `/`. That's a Hostinger-side pull
+  problem, not a build problem — confirm in File Manager whether
+  `index.html` is actually there. Hostinger's Git deploy commonly refuses a
+  target directory that isn't empty, so clearing `public_html` and hitting
+  Deploy again usually fixes it. The manual route above is the quick unblock.
 - **`/apply` form says "not activated"** → `NEXT_PUBLIC_WEB3FORMS_KEY` secret
   is missing or misspelled in GitHub. Fix it, then re-run the workflow — a
   secret change alone doesn't trigger a rebuild.

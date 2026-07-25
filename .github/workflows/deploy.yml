@@ -62,6 +62,18 @@ jobs:
           test -f out/404.html   || echo "::warning::out/404.html missing."
           echo "Exported $(find out -type f | wc -l) files, $(du -sh out | cut -f1) total."
 
+      - name: Upload site as a downloadable zip
+        # Fallback path: if Hostinger's Git pull ever misbehaves, grab this
+        # from the run's summary page (Actions tab > this run > Artifacts),
+        # unzip, and drop the CONTENTS into public_html. Its internal layout
+        # is already the web-root layout -- index.html sits at the top.
+        # Means you never need a local build just to hand-deploy.
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-for-hostinger
+          path: out
+          retention-days: 30
+
       - name: Publish to deploy branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
